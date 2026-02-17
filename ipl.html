@@ -1,0 +1,397 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IPL Fan Arena</title>
+
+    <style>
+        body{
+            margin:0;
+            font-family:'Segoe UI',sans-serif;
+            background:linear-gradient(135deg,#0f2027,#203a43,#2c5364);
+            color:white;
+            overflow-x:hidden;
+        }
+
+        header{
+            display:flex;
+            justify-content:space-between;
+            align-items:center;
+            padding:15px 30px;
+            background:#111;
+        }
+
+        nav a{
+            margin:0 15px;
+            cursor:pointer;
+            text-decoration:none;
+            color:white;
+            font-weight:bold;
+        }
+
+        nav a:hover{color:#ffcc00;}
+
+        .page{display:none;padding:30px;}
+        .active{display:block;}
+
+        h1{text-align:center;margin-bottom:20px;}
+
+        .container{
+            display:flex;
+            justify-content:center;
+            gap:40px;
+            flex-wrap:wrap;
+        }
+
+        .team-box{
+            width:380px;
+            min-height:380px;
+            background:rgba(255,255,255,0.05);
+            border-radius:20px;
+            padding:20px;
+            position:relative;
+            transition:.3s;
+        }
+
+        .team-box.leader{
+            box-shadow:0 0 25px #00ffcc;
+            border:2px solid #00ffcc;
+        }
+
+        .team-name{
+            font-size:22px;
+            font-weight:bold;
+        }
+
+        .vote-grid{
+            display:grid;
+            grid-template-columns:repeat(auto-fill,20px);
+            gap:5px;
+            margin-top:15px;
+            justify-content:center;
+        }
+
+        .square{
+            width:20px;
+            height:20px;
+            border-radius:4px;
+            animation:pop .3s ease;
+        }
+
+        @keyframes pop{
+            from{transform:scale(0);}
+            to{transform:scale(1);}
+        }
+
+        .blue{background:#0066cc;}
+        .yellow{background:#ffcc00;}
+
+        button{
+            margin-top:15px;
+            padding:10px 20px;
+            border:none;
+            border-radius:8px;
+            font-weight:bold;
+            cursor:pointer;
+        }
+
+        .mi-btn{background:#0066cc;color:white;}
+        .csk-btn{background:#ffcc00;color:black;}
+
+        .stats{margin-top:8px;font-size:14px;}
+
+        .card{
+            background:rgba(255,255,255,0.05);
+            padding:20px;
+            border-radius:15px;
+            margin:10px 0;
+        }
+
+        .badge{
+            display:inline-block;
+            background:#ffcc00;
+            color:black;
+            padding:6px 12px;
+            border-radius:20px;
+            margin:5px;
+            font-size:13px;
+        }
+
+        .level{
+            font-size:20px;
+            margin-top:10px;
+            color:#00ffcc;
+        }
+
+        footer{
+            text-align:center;
+            padding:20px;
+            opacity:0.6;
+        }
+
+        .dot{
+            display:inline-block;
+            width:12px;
+            height:12px;
+            border-radius:50%;
+            margin-right:8px;
+            vertical-align:middle;
+        }
+
+        .blue-dot{
+            background:#0066cc;
+        }
+
+        .yellow-dot{
+            background:#ffcc00;
+        }
+        .logo{
+            display:flex;
+            align-items:center;
+            font-size:22px;
+            font-weight:bold;
+        }
+
+        .bat-icon{
+            width:20px;
+            height:20px;
+            margin-right:10px;
+            background:linear-gradient(45deg,#ffcc00,#ffaa00);
+            border-radius:3px;
+            transform:rotate(-20deg);
+            position:relative;
+        }
+
+        .bat-icon::after{
+            content:"";
+            position:absolute;
+            bottom:-6px;
+            left:7px;
+            width:6px;
+            height:8px;
+            background:#0066cc;
+            border-radius:2px;
+        }
+
+        .badge{
+            display:inline-flex;
+            align-items:center;
+            gap:6px;
+            background:linear-gradient(45deg,#ffcc00,#ffaa00);
+            color:black;
+            padding:8px 14px;
+            border-radius:25px;
+            margin:6px;
+            font-size:14px;
+            font-weight:600;
+            box-shadow:0 4px 10px rgba(0,0,0,0.3);
+        }
+
+        .badge .material-icons{
+            font-size:18px;
+        }
+
+
+    </style>
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+</head>
+
+<body>
+
+<header>
+    <h2 class="logo"><span class="material-icons">sports_cricket</span>  IPL Fan Arena</h2>
+    <nav>
+        <a onclick="showPage('home')">Home</a>
+        <a onclick="showPage('leaderboard')">Leaderboard</a>
+        <a onclick="showPage('badges')">Badges</a>
+        <a onclick="showPage('results')">Results</a>
+        <a onclick="showPage('about')">About</a>
+    </nav>
+</header>
+
+<!-- HOME -->
+<div id="home" class="page active">
+    <h1>MI 🆚 CSK Fan Battle</h1>
+
+    <div class="container">
+        <div class="team-box" id="miBox">
+            <div class="team-name"><span class="dot blue-dot"></span>Mumbai Indians</div>
+            <div class="stats" id="miStats"></div>
+            <div class="vote-grid" id="miGrid"></div>
+            <button class="mi-btn" onclick="vote('MI')">Vote MI</button>
+        </div>
+
+        <div class="team-box" id="cskBox">
+            <div class="team-name"><span class="dot yellow-dot"></span>Chennai Super Kings</div>
+            <div class="stats" id="cskStats"></div>
+            <div class="vote-grid" id="cskGrid"></div>
+            <button class="csk-btn" onclick="vote('CSK')">Vote CSK</button>
+        </div>
+    </div>
+</div>
+
+<!-- LEADERBOARD -->
+<div id="leaderboard" class="page">
+    <h1>Your Fan Ranking</h1>
+    <div class="card">
+        <p>Total Points: <span id="points"></span></p>
+        <p class="level" id="level"></p>
+    </div>
+</div>
+
+<!-- BADGES -->
+<div id="badges" class="page">
+    <h1>Your Achievements</h1>
+    <div id="badgeContainer"></div>
+</div>
+
+<!-- RESULTS -->
+<div id="results" class="page">
+    <h1>Past Match Result</h1>
+    <div class="card">
+        MI: <span id="finalMI"></span> Votes<br>
+        CSK: <span id="finalCSK"></span> Votes
+    </div>
+</div>
+
+<!-- ABOUT -->
+<div id="about" class="page">
+    <h1>About Fan Arena</h1>
+    <div class="card">
+        This is a fan-powered IPL voting experience where every vote becomes a square on the wall.
+        Compete, earn badges, and climb the leaderboard 🔥
+    </div>
+</div>
+
+<footer>Made for IPL Fans <span class="material-icons">favorite</span>️</footer>
+
+<script>
+
+    let votes = JSON.parse(localStorage.getItem("votes")) || {MI:0,CSK:0};
+    let voted = localStorage.getItem("voted");
+    let points = localStorage.getItem("points") ? parseInt(localStorage.getItem("points")):0;
+
+    function showPage(id){
+        document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+        document.getElementById(id).classList.add('active');
+    }
+
+    function render(){
+        let total = votes.MI + votes.CSK;
+        let miPercent = total?((votes.MI/total)*100).toFixed(1):0;
+        let cskPercent = total?((votes.CSK/total)*100).toFixed(1):0;
+
+        miStats.innerText = votes.MI+" Votes ("+miPercent+"%)";
+        cskStats.innerText = votes.CSK+" Votes ("+cskPercent+"%)";
+
+        miGrid.innerHTML="";
+        cskGrid.innerHTML="";
+
+        for(let i=0;i<votes.MI;i++){
+            let d=document.createElement("div");
+            d.className="square blue";
+            miGrid.appendChild(d);
+        }
+        for(let i=0;i<votes.CSK;i++){
+            let d=document.createElement("div");
+            d.className="square yellow";
+            cskGrid.appendChild(d);
+        }
+
+        miBox.classList.remove("leader");
+        cskBox.classList.remove("leader");
+        if(votes.MI>votes.CSK) miBox.classList.add("leader");
+        if(votes.CSK>votes.MI) cskBox.classList.add("leader");
+
+        finalMI.innerText=votes.MI;
+        finalCSK.innerText=votes.CSK;
+
+        document.getElementById("points").innerText=points;
+        updateLevel();
+        updateBadges();
+    }
+
+    function vote(team){
+        if(voted){alert("Already voted!");return;}
+
+        votes[team]++;
+        points+=10;
+
+        localStorage.setItem("votes",JSON.stringify(votes));
+        localStorage.setItem("voted",true);
+        localStorage.setItem("points",points);
+
+        confetti();
+        render();
+    }
+
+    function updateLevel(){
+        let lvl="Bronze Fan";
+        if(points>=30) lvl="Silver Fan";
+        if(points>=60) lvl="Gold Fan";
+        if(points>=100) lvl="Legend Fan 👑";
+        document.getElementById("level").innerText=lvl;
+    }
+
+    function updateBadges(){
+        let b=document.getElementById("badgeContainer");
+        b.innerHTML="";
+        if(points>=10)
+            b.innerHTML+=`
+<div class="badge">
+    <span class="material-icons">how_to_vote</span>
+    First Vote
+</div>`;
+
+        if(points>=30)
+            b.innerHTML+=`
+<div class="badge">
+    <span class="material-icons">bolt</span>
+    Active Fan
+</div>`;
+
+        if(points>=60)
+            b.innerHTML+=`
+<div class="badge">
+    <span class="material-icons">emoji_events</span>
+    Super Predictor
+</div>`;
+
+        if(points>=100)
+            b.innerHTML+=`
+<div class="badge">
+    <span class="material-icons">workspace_premium</span>
+    IPL Legend
+</div>`;
+
+    }
+
+    function confetti(){
+        for(let i=0;i<30;i++){
+            let c=document.createElement("div");
+            c.style.position="fixed";
+            c.style.width="8px";
+            c.style.height="8px";
+            c.style.background=Math.random()>0.5?"#ffcc00":"#0066cc";
+            c.style.left=Math.random()*window.innerWidth+"px";
+            c.style.top="-10px";
+            c.style.opacity=1;
+            c.style.borderRadius="50%";
+            document.body.appendChild(c);
+            let fall=setInterval(()=>{
+                c.style.top=parseInt(c.style.top)+5+"px";
+                c.style.opacity-=0.02;
+                if(parseFloat(c.style.opacity)<=0){
+                    clearInterval(fall);
+                    c.remove();
+                }
+            },20);
+        }
+    }
+
+    render();
+
+</script>
+
+</body>
+</html>
